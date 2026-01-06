@@ -36,9 +36,15 @@ class RAGEngine:
         # Upsert omitted in skeleton.
 
     def query(self, question: str) -> str:
-        # Real flow:
-        # 1. Embed question
-        # 2. Query Pinecone
-        # 3. Compose prompt with retrieved context
-        # 4. Call OpenAI chat model
-        return f"Demo answer for: '{question}'. Wire this up to Pinecone + OpenAI for full RAG."
+        if not hasattr(self, "last_docs") or not self.last_docs:
+            return "No documents uploaded yet."
+    
+        text = self.last_docs[0]["text"]
+        preview = text[:500]
+    
+        return (
+            f"Based on the uploaded document, here is a preview:\n\n"
+            f"{preview}\n\n"
+            f"(This is a demo RAG response without external APIs.)"
+        )
+
