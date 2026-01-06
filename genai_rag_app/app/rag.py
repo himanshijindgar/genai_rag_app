@@ -30,6 +30,7 @@ class RAGEngine:
         # - split to chunks
         # - embed each
         # - upsert to Pinecone
+        self.last_docs = docs
         print(f"[RAGEngine] Ingesting {len(docs)} documents...")
         for d in docs:
             _ = self._embed(d["text"])
