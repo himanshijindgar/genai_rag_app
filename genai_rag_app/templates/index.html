@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GenAI RAG Demo</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>GenAI RAG App</h1>
+    <section>
+      <h2>1. Upload documents</h2>
+      <form id="ingest-form">
+        <input type="file" id="files" name="files" multiple>
+        <button type="submit">Ingest</button>
+      </form>
+      <p id="ingest-status"></p>
+    </section>
+
+    <section>
+      <h2>2. Ask questions about your documents</h2>
+      <form id="chat-form">
+        <input id="query" name="query" placeholder="Ask a question...">
+        <button type="submit">Ask</button>
+      </form>
+      <div id="answer"></div>
+    </section>
+  </div>
+
+<script>
+document.getElementById("ingest-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const filesInput = document.getElementById("files");
+  const formData = new FormData();
+  for (let f of filesInput.files) {
+    formData.append("files", f);
+  }
+  const res = await fetch("/ingest", {
+    method: "POST",
+    body: formData
+  });
+  const data = await res.json();
+  document.getElementById("ingest-status").innerText = data.detail || "Done";
+});
+
+document.getElementById("chat-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const query = document.getElementById("query").value;
+  const form = new FormData();
+  form.append("query", query);
+  const res = await fetch("/chat", {
+    method: "POST",
+    body: form
+  });
+  const data = await res.json();
+  document.getElementById("answer").innerText = data.answer || "No answer";
+});
+</script>
+</body>
+</html>
